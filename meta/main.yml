@@ -1,0 +1,26 @@
+galaxy_info:
+  author: "Nicolas CANIART"
+  description: "Simple Ansible Role that installs a given list of Debian packages (`.deb`)."
+
+  license: GPLv2
+
+  min_ansible_version: 2.2  # Not tested with other versions
+  github_branch: master
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - all
+  - name: Debian
+    versions:
+    - jessie
+    - stretch
+    - sid
+
+  galaxy_tags:
+    - 'apt'
+    - 'debian'
+    - 'install'
+    - 'package'
+
+dependencies: []

@@ -1,0 +1,5 @@
+---
+pkginstall_cache_ttl: 3600
+pkginstall_packages: []
+pkginstall_recommended: no
+pkginstall_update_cache: yes

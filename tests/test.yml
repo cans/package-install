@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  remote_user: root
+  roles:
+    - role: package-install
+      pkg_install_packages:
+        - debconf
+        - vim

@@ -19,7 +19,15 @@ This role has no particular pre-requisite.
 Role Variables
 --------------
 
-- `pkg_install_packages`: the list of packages to install. (default: *undefined*)
+- `pkg_install_cache_ttl`: package cache validity duration, in seconds
+  (default: 3600)
+- `pkg_install_packages`: the list of packages to install (default:
+  `[]`)
+- `pkg_install_recommanded`: whether to install *recommanded* packages
+  alongside the packages explicitly listed for installation (default:
+  no).
+- `pkg_install_update_cache`: whether to update the package cache or not
+  before installing packages (default: yes)
 
 
 Dependencies

@@ -64,9 +64,9 @@ Then just call the role.
   vars:
     pkginstall_packages: "{{ first_role_packages + second_role_packages }}"
   roles:
-    - { role: cans.package-install }
-    - { role: first_role }
-    - { role: second_role }
+    - role: cans.package-install
+    - role: first_role
+    - role: second_role
 ```
 
 If for some reason you _cannot_ install all the packages at once (_e.g._
@@ -78,10 +78,26 @@ able to install the packages required by `second_role`:
   roles:
     - role: cans.package-install
       pkginstall_packages: "{{ first_role_packages }}"
-    - { role: first_role }
+    - role: first_role
     - role: cans.package-install
       pkginstall_packages: "{{ second_role_packages }}"
-    - { role: second_role }
+    - role: second_role
+```
+
+The above examples assume Ansible connects to the target servers with an identity
+that as sufficient privileges to install packages. If not you may need to use the
+either or both of the `remote_user` and `become` keywords:
+
+```yaml
+- hosts: servers
+  remote_user: "privileged_user"
+  vars:
+    pkginstall_packages: "{{ first_role_packages + second_role_packages }}"
+  roles:
+    - role: cans.package-install
+      become: yes
+    - role: first_role
+    - role: second_role
 ```
 
 

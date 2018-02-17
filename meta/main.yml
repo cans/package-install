@@ -5,7 +5,7 @@ galaxy_info:
   license: GPLv2
 
   min_ansible_version: 2.2  # Not tested with other versions
-  github_branch: master
+  # github_branch: master
 
   platforms:
   - name: Ubuntu

@@ -11,14 +11,16 @@ Simple Ansible Role that installs a given list of Debian packages
 
 The intent of this role is not to come with all the bells and whistles.
 It is more a minimalistic, but efficient and reusable, package installation
-method. It is basically a function that given a list of packages,
+method. It is basically a procedure that, when given a list of packages,
 installs them.
 
 
 Requirements
 ------------
 
-This role has no particular pre-requisite.
+This role has no particular pre-requisite. But is assumes the target
+server(s) use the [Debian distribution](https://www.debian.org) or a
+derivative.
 
 
 Role Variables
@@ -84,13 +86,13 @@ able to install the packages required by `second_role`:
     - role: second_role
 ```
 
-The above examples assume Ansible connects to the target servers with an identity
-that as sufficient privileges to install packages. If not you may need to use the
-either or both of the `remote_user` and `become` keywords:
+The above examples assume Ansible connects to the target servers with an
+identity that has sufficient privileges to install packages. If not you
+may need to use either or both of the `remote_user` and `become` keywords:
 
 ```yaml
 - hosts: servers
-  remote_user: "privileged_user"
+  remote_user: "privileged-user"
   vars:
     pkginstall_packages: "{{ first_role_packages + second_role_packages }}"
   roles:
@@ -110,4 +112,4 @@ GPLv2
 Author Information
 ------------------
 
-Copyright © 2017, Nicolas CANIART.
+Copyright © 2017-2018, Nicolas CANIART.

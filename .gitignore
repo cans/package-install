@@ -1,2 +1,4 @@
 *~
+*.retry
 README.html
+tests/roles/*

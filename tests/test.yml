@@ -1,8 +1,22 @@
 ---
-- hosts: localhost
+- hosts: servers
   remote_user: root
+  pre_tasks:
+    - name: "Ensure vim's not already installed"
+      stat:
+        path: "/usr/bin/vim.basic"
+      register: vim_state
+      failed_when: 'vim_state.stat.exists'  # and vim_state
+
   roles:
-    - role: package-install
-      pkg_install_packages:
-        - debconf
+    - role: "package-install"
+      pkginstall_packages:
         - vim
+
+  tasks:
+    - name: "Ensure vim was installed"
+      stat:
+        path: "/usr/bin/vim.basic"
+      register: vim_state
+      failed_when: 'not vim_state|success and vim_state.stat.executable'
+

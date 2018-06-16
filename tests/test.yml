@@ -2,23 +2,103 @@
 - name: "cans.package-install Role Test Suite"
   hosts: servers
   remote_user: root
+  vars:
+    binary: "/usr/bin/vim"
+    packages: ['vim']
   pre_tasks:
-    - name: "Ensure vim's not already installed"
+    - name: "Ensure {{ binary | basename }}'s not already installed"
       stat:
-        path: "/usr/bin/vim.basic"
-      register: vim_state
-      failed_when: 'vim_state.stat.exists'  # and vim_state
+        path: "{{ binary }}"
+      register: binary_state
+      failed_when: 'binary_state.stat.exists'  # and vim_state
 
   roles:
     - role: "package-install"
-      pkginstall_packages:
-        - vim
+      pkginstall_packages: "{{ packages }}"
+      pkginstall_cache_update: false
       become: yes
 
   tasks:
-    - name: "Ensure vim was installed"
+    - name: "Ensure {{ binary | basename }} was installed"
       stat:
-        path: "/usr/bin/vim.basic"
-      register: vim_state
-      failed_when: 'not vim_state|success and vim_state.stat.executable'
+        path: "{{ binary }}"
+      register: binary_state
+      failed_when: 'binary_state is not success and binary_state.stat.executable'
 
+- name: "cans.package-install Role Test Suite"
+  hosts: servers
+  remote_user: root
+  vars:
+    binary: "/usr/bin/hello"
+    packages: ['hello']
+  pre_tasks:
+    - name: "Ensure {{ binary | basename }}'s not already installed"
+      stat:
+        path: "{{ binary }}"
+      register: binary_state
+      failed_when: 'binary_state.stat.exists'  # and binary_state
+
+  roles:
+    - role: "package-install"
+      pkginstall_packages: "{{ packages }}"
+      pkginstall_cache_purge: true
+      # pkginstall_cache_ttl: 1
+      pkginstall_cache_update: true
+      become: yes
+
+  tasks:
+
+    - name: "Ensure {{ binary | basename }} was installed"
+      stat:
+        path: "{{ binary }}"
+      register: binary_state
+      failed_when: 'binary_state is not success and binary_state.stat.executable'
+
+    - name: "List Distribution Package Manager Cache Files"
+      find:
+        paths: "{{ pkginstall_apt_package_list_cache_directory }}"
+        patterns: "*"
+      when: "ansible_distribution in ['Debian', 'Ubuntu', ] and pkginstall_cache_purge"
+      register: cache_files
+      failed_when: "cache_files.matched > 0"
+
+- name: "cans.package-install Role Test Suite"
+  hosts: servers
+  remote_user: root
+  vars:
+    binary: "/usr/bin/nano"
+    packages: ['nano']
+  pre_tasks:
+    - name: "Ensure {{ binary | basename }}'s not already installed"
+      stat:
+        path: "{{ binary }}"
+      register: binary_state
+      failed_when: 'binary_state.stat.exists'  # and binary_state
+
+  roles:
+    - role: "package-install"
+      pkginstall_packages: "{{ packages }}"
+      pkginstall_cache_purge: false
+      pkginstall_cache_update: true
+      pkginstall_cache_ttl: 1
+      become: yes
+
+  tasks:
+
+    - name: "Ensure {{ binary | basename }} was installed"
+      stat:
+        path: "{{ binary }}"
+      register: binary_state
+      failed_when: 'binary_state is not success and binary_state.stat.executable'
+
+    - name: "List Distribution Package Manager Cache Files"
+      find:
+        paths: "{{ pkginstall_apt_package_list_cache_directory }}"
+        patterns: "*"
+      when: "ansible_distribution in ['Debian', 'Ubuntu', ] and pkginstall_cache_purge"
+      register: cache_files
+      failed_when: "cache_files.matched == 0"
+
+
+
+# vim: et:sw=2:syntax=yaml:ts=2:

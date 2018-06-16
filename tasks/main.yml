@@ -1,13 +1,29 @@
 ---
-- name: Install Distribution Packages
+- name: "Install Distribution Packages"
   apt:
     cache_valid_time: "{{pkginstall_cache_ttl}}"
     install_recommends: "{{pkginstall_recommended}}"
     name: "{{item}}"
     state: "present"
-    update_cache: "{{pkginstall_update_cache}}"
+    update_cache: "{{pkginstall_cache_update}}"
   when: "ansible_distribution in ['Debian', 'Ubuntu', ]"
   with_items: "{{pkginstall_packages}}"
+
+- name: "List Distribution Package Manager Cache Files"
+  find:
+    paths: "{{ pkginstall_apt_package_list_cache_directory }}"
+    patterns: "*"
+  register: _pkginstall_package_list_cache_files
+  when: "ansible_distribution in ['Debian', 'Ubuntu', ] and pkginstall_cache_purge"
+
+- name: "Purge Distribution Package Manager Cache"
+  file:
+    path: "{{ item.path }}"
+    state: absent
+    force: yes
+  with_items: "{{ _pkginstall_package_list_cache_files.files }}"
+  when: "ansible_distribution in ['Debian', 'Ubuntu', ] and pkginstall_cache_purge"
+
 
 # TODO: (or not) make this generic for other distros
 # vim: et:sw=2:syntax=yaml:ts=2:

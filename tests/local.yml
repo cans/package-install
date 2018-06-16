@@ -4,7 +4,7 @@
   gather_facts: false
   vars:
     inventory:
-      - name: user_make_host_1
+      - name: package_install_host_1
         # image: "chrismeyers/centos6"
         image: "python:3.6-stretch"
         groups:

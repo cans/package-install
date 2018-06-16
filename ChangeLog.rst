@@ -14,12 +14,20 @@ Unreleased
 Added:
 ~~~~~~
 
-*
+* Added ability to purge package manager cache after installing
+  packages. When using this role to build container images, that can
+  drastically reduce image size. Adds some variable to perform
+  that tasks (_cf._ documentation for details):
+
+  - ``pkginstall_cache_purge``.
+  - ``pkginstall_apt_package_list_cache_directory``.
+
 
 Changed:
 ~~~~~~~~
 
-*
+* Deprecated variable ``pkginstall_update_cache`` in favor of
+  ``pkginstall_cache_update``;
 
 
 Version v2.0.0 -- 2018-02-17

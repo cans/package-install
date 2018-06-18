@@ -22,12 +22,20 @@ Added:
   - ``pkginstall_cache_purge``.
   - ``pkginstall_apt_package_list_cache_directory``.
 
+* Added ability to remove/purge packages. Introduces variables (_cf._
+  documentation for details):
+
+  - ``pkginstall_packages_absent``.
+  - ``pkginstall_purge``.
+
 
 Changed:
 ~~~~~~~~
 
 * Deprecated variable ``pkginstall_update_cache`` in favor of
   ``pkginstall_cache_update``;
+* Deprecated variable ``pkginsall_packages`` in favor of
+  ``pkginstall_packages_present``;
 
 
 Version v2.0.0 -- 2018-02-17

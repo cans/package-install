@@ -1,0 +1,7 @@
+---
+binaries:
+  - "/usr/bin/hello"
+  - "/usr/bin/nano"
+  - "/usr/bin/vim"
+packages: ['hello', 'nano', 'vim']
+subinventory_file: "sub-inventory.ini"

@@ -2,3 +2,4 @@
 *.retry
 README.html
 tests/roles/*
+*.log

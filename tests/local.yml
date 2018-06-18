@@ -18,4 +18,16 @@
 
 - import_playbook: ./test.yml
 
+
+- name: Local Tests Clean-up
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: "Remove Test Container"
+      docker_container:
+        name: package_install_host_1
+        state: absent
+
+
 # vim: et:sw=2:syntax=yaml:ts=2:

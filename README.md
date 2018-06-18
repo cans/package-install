@@ -33,8 +33,15 @@ with `_pkginstall_`. You should not use those variables.
 
 ### Input variables
 
-For this roles to perform any tasks requires you *must* define the
-`pkginstall_packages` variable.
+For this roles to perform any task, you *must* define either or both of the
+`pkginstall_packages_absent` and `pkginstall_packages_present variables.
+
+- `pkginstall_packages`: **DEPRECATED** Use `pkginstall_package_present`
+  instead (default: `[]`);
+- `pkginstall_packages_present`: a list of package names to ensure are
+  installed on the target host(s) (default: `[]`);
+- `pkginstall_packages_absent`: a list of package names to ensure are *not*
+  installed on the target host(s) (default: `[]`);
 
 
 ### Defaults
@@ -48,6 +55,8 @@ For this roles to perform any tasks requires you *must* define the
   (default: 3600)
 - `pkginstall_cache_update`: whether to update the package cache or not
   before installing packages (default: `true`)
+- `pkginstall_purge`: when removing packages, also remove their configuration
+  files (default: `true`);
 - `pkginstall_recommended`: whether to install *recommended* packages
   alongside the packages explicitly listed for installation (default:
   `false`).

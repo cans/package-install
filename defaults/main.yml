@@ -7,5 +7,10 @@ pkginstall_cache_purge: false
 # - `pkginstall_cache_update` overrides just work as expected.
 pkginstall_cache_update: "{{ pkginstall_update_cache }}"
 pkginstall_packages: []
+# Same as above, for backward compatibility, `pkginstall_packages_present`
+# defaults to `pkginstall_packages`
+pkginstall_packages_present: "{{ pkginstall_packages }}"
+pkginstall_packages_absent: []
+pkginstall_purge: true
 pkginstall_recommended: false
 pkginstall_update_cache: true

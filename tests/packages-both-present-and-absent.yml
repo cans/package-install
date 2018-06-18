@@ -1,0 +1,15 @@
+---
+- name: "Ensure `pkginstall_packages_absent` and `pkginstall_packages_present` intersection check is effective"
+  hosts: servers
+  remote_user: root
+
+  roles:
+    - role: "package-install"
+      pkginstall_packages_absent: "{{ packages }}"
+      pkginstall_packages_present: "{{ packages }}"
+      pkginstall_cache_purge: false
+      pkginstall_cache_update: true
+      pkginstall_cache_ttl: 1
+      become: yes
+
+# vim: et:sw=2:syntax=yaml:ts=2:

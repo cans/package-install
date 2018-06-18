@@ -1,4 +1,19 @@
 ---
+- name: "Check lists of package to install and remove don't intersect"
+  fail:
+     msg: |
+       "You asked the following packages to be both absent and present: "
+       "{{ pkginstall_packages_present | intersect(pkginstall_packages_absent) | join(', ') }}"
+  when: "pkginstall_packages_present | intersect(pkginstall_packages_absent) | length > 0"
+
+- name: "Remove Distribution Packages"
+  apt:
+    name: "{{ item }}"
+    state: "absent"
+    purge: "{{ pkginstall_purge }}"
+  when: "ansible_distribution in ['Debian', 'Ubuntu', ]"
+  with_items: "{{ pkginstall_packages_absent }}"
+
 - name: "Install Distribution Packages"
   apt:
     cache_valid_time: "{{pkginstall_cache_ttl}}"
@@ -7,7 +22,7 @@
     state: "present"
     update_cache: "{{pkginstall_cache_update}}"
   when: "ansible_distribution in ['Debian', 'Ubuntu', ]"
-  with_items: "{{pkginstall_packages}}"
+  with_items: "{{ pkginstall_packages_present }}"
 
 - name: "List Distribution Package Manager Cache Files"
   find:

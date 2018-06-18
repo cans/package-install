@@ -14,7 +14,7 @@
 
   roles:
     - role: "package-install"
-      pkginstall_packages: "{{ packages }}"
+      pkginstall_packages_present: "{{ packages }}"
       pkginstall_cache_update: false
       become: yes
 
@@ -25,7 +25,8 @@
       register: binary_state
       failed_when: 'binary_state is not success and binary_state.stat.executable'
 
-- name: "cans.package-install Role Test Suite"
+
+- name: "Ensure `pkginstallpackages` overrides `pkginsall_packages_present` and `pkginstall_cache_purge` is effective."
   hosts: servers
   remote_user: root
   vars:
@@ -40,7 +41,7 @@
 
   roles:
     - role: "package-install"
-      pkginstall_packages: "{{ packages }}"
+      pkginstall_packages_present: "{{ packages }}"
       pkginstall_cache_purge: true
       # pkginstall_cache_ttl: 1
       pkginstall_cache_update: true
@@ -62,7 +63,8 @@
       register: cache_files
       failed_when: "cache_files.matched > 0"
 
-- name: "cans.package-install Role Test Suite"
+
+- name: "Ensure `pkginstall_cache_update` is effective"
   hosts: servers
   remote_user: root
   vars:
@@ -77,7 +79,7 @@
 
   roles:
     - role: "package-install"
-      pkginstall_packages: "{{ packages }}"
+      pkginstall_packages_present: "{{ packages }}"
       pkginstall_cache_purge: false
       pkginstall_cache_update: true
       pkginstall_cache_ttl: 1
@@ -99,6 +101,72 @@
       register: cache_files
       failed_when: "cache_files.matched == 0"
 
+
+- name: "Ensure `pkginstall_packages_absent` is effective"
+  hosts: servers
+  remote_user: root
+
+  pre_tasks:
+    - name: "Ensure {{ binaries | map('basename') | join(', ') }} are installed"
+      stat:
+        path: "{{ binaries }}"
+      register: binaries_state
+      failed_when: 'binary_state.stat.exists'  # and binary_state
+
+  roles:
+    - role: "package-install"
+      pkginstall_packages_absent: "{{ packages }}"
+      pkginstall_cache_purge: false
+      pkginstall_cache_update: true
+      pkginstall_cache_ttl: 1
+      become: yes
+
+  tasks:
+
+    - name: "Ensure {{ binaries | map('basename') | join(', ') }} were removed"
+      stat:
+        path: "{{ item }}"
+      with_items: "{{ binaries }}"
+      register: binaries_state
+      failed_when: "binaries_state is not success and binaries_state.results | selectattr('stat.exists') | length > 0"
+
+
+- name: "Ensure intersection check on `pkginstall_package_absent` and `pkginstall_packages_present` is effective"
+  hosts: servers
+
+  tasks:
+    - name: "Generate inventory for Ansible nested calls"
+      local_action:
+        module: template
+        src: "inventory.ini"
+        dest: "{{playbook_dir}}/{{ subinventory_file }}"
+
+    - name: "Run playbook feeding the role with conflicting lists of packages"
+      local_action:
+        module: command
+        cmd: "ansible-playbook -i {{playbook_dir}}/{{ subinventory_file }} --connection=local {{ playbook_dir }}/packages-both-present-and-absent.yml"
+        args:
+          chdir: "{{ playbook_dir }}/.."
+      connection: local
+      register: intersection_check
+      changed_when: false
+      # ansible-playbook rc == 2 means some task failed (cf. https://github.com/ansible/ansible/issues/19720)
+      failed_when: "intersection_check is success or intersection_check.rc != 2 or 'You asked the following packages to be both absent and present' not in intersection_check.stdout"
+
+    - name: "Show command result"
+      debug:
+        var: intersection_check
+
+
+- name: "Cleanup tasks"
+  hosts: localhost
+  tasks:
+    - name: "Remove locally generated files"
+      file:
+        state: absent
+        path: "{{ item }}"
+      with_items: "{{ [subinventory_file] }}"
+      # loop: "{{ lookup('list', subinventory_file, wantlist=True) }}"
 
 
 # vim: et:sw=2:syntax=yaml:ts=2:

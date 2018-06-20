@@ -13,7 +13,7 @@ jobs:
       - run:
           name: Create required directories
           command: |
-             mkdir -p $TEST_REPORTS_DIR/ansible-lint.log ~/.virtualenvs ~/.ssh
+             mkdir -p $TEST_REPORTS_DIR/ ~/.virtualenvs ~/.ssh
              # One needs to concateante here any files that can alter the virtualenv in a way:
              #   - setup.py: for the endpoints installed in $VIRTUAL_ENV/bin
              #   - requirements.txt
@@ -35,7 +35,7 @@ jobs:
                 :
             else
                 pushd "${HOME}/.virtualenvs"
-                python -m venv ansible-role-testing
+                python -m venv "ansible-role-testing"
                 popd
                 printf "[ansible]\nroles_path = ${HOME}/roles:..\n" > ./ansible.cfg
                 . "${HOME}/.virtualenvs/ansible-role-testing/bin/activate"
@@ -56,6 +56,9 @@ jobs:
             . "${HOME}/.virtualenvs/ansible-role-testing/bin/activate"
             tests/run-checks.sh
             ansible-playbook -i tests/inventory tests/test.yml --connection=local
+
+      - store_artifacts:
+          path: ~/test-reports
 
 
 # vim: et:sw=2:syntax=yaml:ts=2:

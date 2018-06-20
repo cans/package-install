@@ -1,5 +1,16 @@
 ---
+pkginstall_apt_package_list_cache_directory: "/var/lib/apt/lists"
 pkginstall_cache_ttl: 3600
+pkginstall_cache_purge: false
+# For backward compatibility:
+# - overriding deprecated `pkginstall_update_cache` also overrides this variable
+# - `pkginstall_cache_update` overrides just work as expected.
+pkginstall_cache_update: "{{ pkginstall_update_cache }}"
 pkginstall_packages: []
-pkginstall_recommended: no
-pkginstall_update_cache: yes
+# Same as above, for backward compatibility, `pkginstall_packages_present`
+# defaults to `pkginstall_packages`
+pkginstall_packages_present: "{{ pkginstall_packages }}"
+pkginstall_packages_absent: []
+pkginstall_purge: true
+pkginstall_recommended: false
+pkginstall_update_cache: true

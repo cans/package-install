@@ -28,15 +28,41 @@ Role Variables
 
 All variables in this role are namespaced using the `pkginstall_` prefix.
 
+This role also defines variables for its internal use. Those are prefixed
+with `_pkginstall_`. You should not use those variables.
+
+### Input variables
+
+For this roles to perform any task, you *must* define either or both of the
+`pkginstall_packages_absent` and `pkginstall_packages_present variables.
+
+- `pkginstall_packages`: **DEPRECATED** Use `pkginstall_package_present`
+  instead (default: `[]`);
+- `pkginstall_packages_present`: a list of package names to ensure are
+  installed on the target host(s) (default: `[]`);
+- `pkginstall_packages_absent`: a list of package names to ensure are *not*
+  installed on the target host(s) (default: `[]`);
+
+
+### Defaults
+
+- `pkginstall_apt_package_list_cache_directory`: path to the directory that
+  stores available package lists and packages content lists. This variable
+  is only required if you set `pkginstall_cache_purge` to `true` (see below).
+  It is very unlikely you would ever need to change this. (default:
+  `"/var/lib/apt/lists"`)
 - `pkginstall_cache_ttl`: package cache validity duration, in seconds
   (default: 3600)
-- `pkginstall_packages`: the list of packages to install (default:
-  `[]`)
+- `pkginstall_cache_update`: whether to update the package cache or not
+  before installing packages (default: `true`)
+- `pkginstall_purge`: when removing packages, also remove their configuration
+  files (default: `true`);
 - `pkginstall_recommended`: whether to install *recommended* packages
   alongside the packages explicitly listed for installation (default:
   `false`).
-- `pkginstall_update_cache`: whether to update the package cache or not
-  before installing packages (default: `true`)
+- `pkginstall_update_cache`: **DEPRECATED** use `pkginstall_cache_update`
+  instead (default: `true`)
+
 
 
 Dependencies

@@ -30,10 +30,10 @@ If you want to run the tests locally, you will need to:
 
 - Run the tests::
 
-    $ ansible-playbook tests/local.yml
+    $ ansible-playbook -i tests/inventory.local --connection=local tests/local.yml
 
 
-The test suite itself is in the ``tests/test.yml`` playbook. The 
+The test suite itself is in the ``tests/test.yml`` playbook. The
 ``local.yml`` playbook is just here to bootstrap a docker container
 in which run the tests, so you don't mess your machine's configuration
 testing this role. You'll just mess the docker container instance.

@@ -14,6 +14,20 @@ Unreleased
 Added:
 ~~~~~~
 
+* Added
+
+Changed:
+~~~~~~~~
+
+* Modified
+
+
+Version v2.1.0 -- 2018-06-20
+----------------------------
+
+Added:
+~~~~~~
+
 * Added ability to purge package manager cache after installing
   packages. When using this role to build container images, that can
   drastically reduce image size. Adds some variable to perform
